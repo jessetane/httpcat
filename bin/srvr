@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#	srvr - an http server in bash using netcat
+# srvr - an http server in bash using netcat
 #
 
 # vars

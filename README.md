@@ -1,4 +1,5 @@
 ```
+
  .-----.----.--.--.----.
  |__ --|   _|  |  |   _|
  |_____|__|  \___/|__|
@@ -13,9 +14,7 @@ Just an exercise to understand the shell better...
 FIFOs
 
 ## Usage
-```bash
-srvr file/to/serve [http-status]
-```
+`srvr file/to/serve [http-status]`
 
 ## License
 [WTF](http://www.wtfpl.net/txt/copying/)
