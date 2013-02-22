@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+#
+#	srvr - an http server with bash and netcat
+#
+
+# vars
+dir="$(cd "$(dirname "$BASH_SOURCE")" && pwd)"
+pid="$$"
+port="8080"
+index="$1"
+status="$2" && [ -z "$status" ] && status="200"
+request="$dir/request"
+response="$dir/response"
+
+# usage
+[ -z "$index" ] && echo "please specify a file to serve" >&2 && exit 1
+[ ! -f "$index" ] && echo "file does not exist: $index" >&2 && exit 1
+
+# go time
+listen() {
+  
+  # trap signals
+  trap "echo -n ' '; quit" SIGTERM SIGINT SIGQUIT SIGKILL
+  
+  # load the file to serve into memory
+  index="$(cat "$index")"
+  
+  # make some fifos
+  mkfifo request
+  mkfifo response
+  
+  # serve
+  echo "listening on $port"
+  serve
+}
+
+# serve
+serve() {
+  cat response | netcat -l -p "$port" > request &
+  handler
+}
+
+# 
+handler() {
+  while read line
+  do
+    echo "$line"
+    if test "${#line}" = 1
+    then
+      respond
+      break
+    fi
+  done < request
+  
+  # do it again
+  serve
+}
+
+# send the file
+respond() {
+  echo -e "HTTP/1.1 $status\r\n\r\n$index" > response
+  close
+}
+
+# reap
+close() {
+  
+  # ps
+  processes="$(ps -o pid -o pgid -o command | grep "$pid")"
+  
+  echo "$processes" | while read process
+  do
+    child="$(echo "$process" | sed "s/[ ]*\([^ ]*\).*/\1/")"
+    if [ "$child" != "$pid" ]
+    then
+      kill "$child" 2> /dev/null
+    fi
+  done
+}
+
+# all done
+quit() {
+  
+  # kill children
+  close
+  
+  # remove fifos
+  rm -rf request
+  rm -rf response
+  
+  echo "bye!"
+  exit 0
+}
+
+# start serving
+listen
