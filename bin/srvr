@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#	srvr - an http server with bash and netcat
+#	srvr - an http server in bash using netcat
 #
 
 # vars
@@ -17,9 +17,9 @@ response="$dir/response"
 [ ! -f "$index" ] && echo "file does not exist: $index" >&2 && exit 1
 
 # go time
-listen() {
+serve() {
   
-  # trap signals
+  # trap ctrl-C
   trap "echo -n ' '; quit" SIGTERM SIGINT SIGQUIT SIGKILL
   
   # load the file to serve into memory
@@ -29,56 +29,52 @@ listen() {
   mkfifo request
   mkfifo response
   
-  # serve
+  # start listening
   echo "listening on $port"
-  serve
+  listen
 }
 
-# serve
-serve() {
+listen() {
   cat response | netcat -l -p "$port" > request &
-  handler
+  handle
 }
 
-# 
-handler() {
+handle() {
+  
+  # read request
   while read line
   do
+    
+    # log to stdout
     echo "$line"
-    if test "${#line}" = 1
-    then
-      respond
-      break
-    fi
+    
+    # only read up to first empty line
+    test "${#line}" = 1 && break
   done < request
   
-  # do it again
-  serve
-}
-
-# send the file
-respond() {
+  # respond
   echo -e "HTTP/1.1 $status\r\n\r\n$index" > response
+  
+  # killing netcat seems to be the 
+  # only way to close the connection
   close
+  
+  # start listening again
+  listen
 }
 
-# reap
+# kills all child processes
 close() {
-  
-  # ps
-  processes="$(ps -o pid -o pgid -o command | grep "$pid")"
-  
-  echo "$processes" | while read process
+  while read process
   do
     child="$(echo "$process" | sed "s/[ ]*\([^ ]*\).*/\1/")"
     if [ "$child" != "$pid" ]
     then
       kill "$child" 2> /dev/null
     fi
-  done
+  done < <(ps -o pid -o pgid -o command | grep "$pid")
 }
 
-# all done
 quit() {
   
   # kill children
@@ -93,4 +89,4 @@ quit() {
 }
 
 # start serving
-listen
+serve
