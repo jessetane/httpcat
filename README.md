@@ -1,8 +1,10 @@
 ```
 
- .-----.----.--.--.----.
- |__ --|   _|  |  |   _|
- |_____|__|  \___/|__|
+  __     __   __                     __   
+ |  |--.|  |_|  |_.-----.----.---.-.|  |_ 
+ |     ||   _|   _|  _  |  __|  _  ||   _|
+ |__|__||____|____|   __|____|___._||____|
+                  |__|
 
 ```
 An http server in bash using netcat
@@ -14,7 +16,7 @@ Just an exercise to understand the shell better...
 FIFOs
 
 ## Usage
-`srvr file/to/serve [http-status]`
+`httpcat file/to/serve [http-status-code] [-p port]`
 
 ## License
-[WTF](http://www.wtfpl.net/txt/copying/)
+[WTFPL](http://www.wtfpl.net/txt/copying/)
