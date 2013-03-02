@@ -34,6 +34,10 @@ get_options() {
 
 serve() {
   
+  # usage
+  [ -z "$index" ] && echo "please specify a file to serve" >&2 && exit 1
+  [ ! -f "$index" ] && echo "$index: file does not exist" >&2 && exit 1
+  
   # trap ctrl-C
   trap "echo -n ' '; quit" SIGTERM SIGINT SIGQUIT SIGKILL
   
