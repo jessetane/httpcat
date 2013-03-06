@@ -6,25 +6,21 @@
 default_version="0.0.1"
 
 install() {
+  cd "$src"
   
-  # args
-  name="$1"
-  version="$2"
-  sourceVersion="$3"
+  # get repo
+  if [ ! -d .git ]
+  then
+    git clone "https://github.com/jessetane/httpcat" tmp
+    mv tmp/.git ./
+    rm -rf tmp
+  fi
   
-  # defaults
-  [ -z "$version" ] && version="$default_version"
-  [ -z "$sourceVersion" ] && sourceVersion="$version"
-  
-  # usage
-  [ -z "$VPKG_ROOT" ] && echo '$VPKG_ROOT must be defined' >&2 && exit 1
-  [ -z "$name" ] && echo "please specify a name" >&2 && exit 1
-  
-  # get repo into the right state
+  # checkout code
   git fetch --all
   git fetch --tags
-  git checkout "$sourceVersion"
+  git reset --hard "$source_version"
   
-  # copy over the source files
-  cp -R "$VPKG_ROOT"/src/"$name" "$VPKG_ROOT"/lib/"$name"/"$version"
+  # install
+  cp -R . "$lib"/"$version"
 }
