@@ -6,9 +6,9 @@
 httpcat() {
   
   # vars
+  nc="$(nc 2>&1 | grep "usage: nc ")"
   pid="$$"
   cwd="$(pwd)"
-  uname="$(uname)"
   port="80"
   status="200"
   
@@ -56,10 +56,12 @@ serve() {
 listen() {
   
   # implementations may vary
-  case "$uname" in
-    "Darwin") cat response | nc -l "$port" > request &;;
-    *)        cat response | netcat -l -p "$port" > request &;;
-  esac
+  if [ -n "$nc" ]
+  then
+    cat response | nc -l "$port" > request & 
+  else
+    cat response | netcat -l -p "$port" > request &
+  fi
   
   # wait for request
   handle
