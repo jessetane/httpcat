@@ -29,8 +29,6 @@ httpcat() {
   [ -n "${opts[2]}" ] && status="${opts[2]}"
   
   # sanity
-  
-  echo "one: $cwd - $index"
   [ -z "$index" ] && echo "please specify a file to serve" >&2 && exit 1
   [ ! -f "$cwd/$index" ] && echo "$index: file does not exist" >&2 && exit 1
   
