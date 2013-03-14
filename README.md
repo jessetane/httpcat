@@ -16,7 +16,13 @@ Just an exercise to understand the shell better...
 FIFOs
 
 ## Usage
-`httpcat file/to/serve [http-status-code] [-p port]`
+```
+httpcat [options] file/to/serve
+```
+
+## Options
+* -p, --port <port>
+* -s, --status <code>
 
 ## License
 [WTFPL](http://www.wtfpl.net/txt/copying/)
