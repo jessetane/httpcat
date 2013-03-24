@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# .vpkg for httpcat
+#
+
+url() {
+  echo "https://github.com/jessetane/httpcat"
+}
+
+version() {
+  echo "0.0.1"
+}
+
+install() {
+  cd "$src"
+  
+  # get repo
+  [ ! -d .git ] && git clone "$(url)" ./
+  
+  # checkout code
+  git fetch --all
+  git fetch --tags
+  
+  # install
+  mkdir -p "$lib"/"$build" && cd $_
+  cp -R "$src"/.git ./
+  git reset --hard "$version"
+}
+
+"$cmd"
