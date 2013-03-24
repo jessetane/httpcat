@@ -12,7 +12,7 @@ version() {
 }
 
 install() {
-  cd "$src"
+  mkdir -p "$src" && cd $_
   
   # get repo
   [ ! -d .git ] && git clone "$(url)" ./
@@ -27,4 +27,4 @@ install() {
   git reset --hard "$version"
 }
 
-"$cmd"
+"$1"
