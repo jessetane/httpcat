@@ -8,23 +8,21 @@ url() {
 }
 
 version() {
-  echo "0.0.1"
+  echo "0.0.2"
 }
 
-install() {
-  mkdir -p "$src" && cd $_
-  
-  # get repo
-  [ ! -d .git ] && git clone "$(url)" ./
+pre_build() {
   
   # checkout code
   git fetch --all
   git fetch --tags
   
   # install
-  mkdir -p "$lib"/"$build" && cd $_
+  mkdir -p "$lib"/"$build"
+  cd "$lib"/"$build"
   cp -R "$src"/.git ./
   git reset --hard "$version"
+  
+  # inform vpkg that we handled the build ourselves
+  echo "$lib"/"$build" > "$intercom"
 }
-
-"$1"
