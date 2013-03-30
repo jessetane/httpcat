@@ -21,12 +21,14 @@ httpcat() {
   
   # parse arguments
   args=("$@")
-  argue "-p, --port, +"\
+  argue "-v, --version"\
+        "-p, --port, +"\
         "-s, --status, +" || return 1
   
   # args & options
   index="${args[0]}"
-  [ -n "${opts[0]}" ] && port="${opts[0]}"
+  [ -n "${opts[0]}" ] && echo "0.0.3" && exit 0
+  [ -n "${opts[1]}" ] && port="${opts[1]}"
   [ -n "${opts[2]}" ] && status="${opts[2]}"
   
   # sanity
