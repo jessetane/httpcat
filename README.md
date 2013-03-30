@@ -16,9 +16,7 @@ Just an exercise to understand the shell better...
 FIFOs
 
 ## Usage
-```
-httpcat [options] file/to/serve
-```
+`httpcat [options] file/to/serve`
 
 ## Options
 * -p, --port <port>
