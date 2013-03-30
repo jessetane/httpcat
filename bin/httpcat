@@ -2,7 +2,6 @@
 #
 # httpcat - an http server in bash using netcat
 #
-#
 
 httpcat() {
   

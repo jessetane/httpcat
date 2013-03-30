@@ -7,7 +7,7 @@
                  |__|
 
 ```
-An http server written in bash using netcat
+An http server in bash using netcat
 
 ## Why
 Just an exercise to understand the shell better
