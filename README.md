@@ -7,20 +7,19 @@
                  |__|
 
 ```
-An http server in bash using netcat
+An http server written in bash using netcat
 
 ## Why
-Just an exercise to understand the shell better...
+Just an exercise to understand the shell better
 
 ## How
 FIFOs
 
 ## Usage
-`httpcat [options] file/to/serve`
+`httpcat [options] path/to/www/dir`
 
 ## Options
 * -p, --port <port>
-* -s, --status <code>
 
 ## License
 [WTFPL](http://www.wtfpl.net/txt/copying/)

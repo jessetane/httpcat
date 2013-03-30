@@ -11,7 +11,6 @@ httpcat() {
   pid="$$"
   cwd="$(pwd)"
   port="80"
-  status="200"
   
   # cd to own dir
   cd "$(dirname "$0")"
@@ -22,27 +21,22 @@ httpcat() {
   # parse arguments
   args=("$@")
   argue "-v, --version"\
-        "-p, --port, +"\
-        "-s, --status, +" || return 1
+        "-p, --port, +" || return 1
   
   # args & options
-  index="${args[0]}"
+  www="${args[0]}"
   [ -n "${opts[0]}" ] && echo "0.0.3" && exit 0
   [ -n "${opts[1]}" ] && port="${opts[1]}"
-  [ -n "${opts[2]}" ] && status="${opts[2]}"
   
   # sanity
-  [ -z "$index" ] && echo "please specify a file to serve" >&2 && exit 1
-  [ ! -f "$index" ] && index="$cwd/$index"
-  [ ! -f "$index" ] && echo "$index: file does not exist" >&2 && exit 1
+  [ -z "$www" ] && echo "please specify a www directory" >&2 && exit 1
+  [ ! -d "$www" ] && www="$cwd"/"$www"
+  [ ! -d "$www" ] && echo "$www: directory does not exist" >&2 && exit 1
   
   serve
 }
 
 serve() {
-  
-  # load the file to serve into memory
-  index="$(cat "$index")" || quit 1
   
   # make some fifos
   mkfifo request
@@ -71,12 +65,14 @@ listen() {
 }
 
 handle() {
-  got_request=false
+  file=""
 
   # read request
   while read line
   do
-    got_request=true
+    
+    # extract the path requested
+    [ -z "$file" ] && file="$(echo "$line" | sed "s|GET \(.*\) HTTP.*|\1|")"
     
     # log to stdout
     echo "$line"
@@ -85,11 +81,23 @@ handle() {
     test "${#line}" = 1 && break
   done < request
   
-  # if we didn't get a request, there was an error
-  [ $got_request = false ] && quit 1
+  # if we didn't get a file request, there was an error
+  [ -z "$file" ] && quit 1
+  
+  # index?
+  if [ "$file" = "/" ]; then
+    file=("$www"/index*)
+  else
+    file="$(echo -e "$(echo "$file" | sed -e 's/%\([0-9A-F][0-9A-F]\)/\\x\1/g')")"  # urldecode
+    file="${www}${file}"
+  fi
   
   # respond
-  echo -e "HTTP/1.1 $status\r\n\r\n$index" > response
+  if [ -e "$file" ]; then
+    cat <(echo -en "HTTP/1.1 200\r\n\r\n") "$file" > response
+  else
+    echo -en "HTTP/1.1 404\r\n\r\n$file: file not found" > response
+  fi
   
   # killing netcat seems to be the 
   # only way to close the connection
