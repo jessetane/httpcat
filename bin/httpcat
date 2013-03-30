@@ -31,7 +31,8 @@ httpcat() {
   
   # sanity
   [ -z "$index" ] && echo "please specify a file to serve" >&2 && exit 1
-  [ ! -f "$cwd/$index" ] && echo "$index: file does not exist" >&2 && exit 1
+  [ ! -f "$index" ] && index="$cwd/$index"
+  [ ! -f "$index" ] && echo "$index: file does not exist" >&2 && exit 1
   
   serve
 }
@@ -39,7 +40,7 @@ httpcat() {
 serve() {
   
   # load the file to serve into memory
-  index="$(cat "$cwd/$index")" || quit 1
+  index="$(cat "$index")" || quit 1
   
   # make some fifos
   mkfifo request

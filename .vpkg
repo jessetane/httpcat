@@ -3,26 +3,30 @@
 # .vpkg for httpcat
 #
 
-url() {
-  echo "https://github.com/jessetane/httpcat"
-}
+# name() {
+#   echo "httpcat"
+# }
 
 version() {
   echo "0.0.2"
 }
 
-pre_build() {
+repository() {
+  echo "https://github.com/jessetane/httpcat"
+}
+
+build() {
   
-  # checkout code
+  # get source
+  [ ! -e .git ] && git clone "$(repository)" ./
+  
+  # update
   git fetch --all
   git fetch --tags
   
-  # install
+  # build
   mkdir -p "$lib"/"$build"
   cd "$lib"/"$build"
   cp -R "$src"/.git ./
   git reset --hard "$version"
-  
-  # inform vpkg that we handled the build ourselves
-  echo "$lib"/"$build" > "$intercom"
 }
