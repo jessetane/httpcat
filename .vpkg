@@ -3,9 +3,9 @@
 # .vpkg for httpcat
 #
 
-# name() {
-#   echo "httpcat"
-# }
+name() {
+  echo "httpcat"
+}
 
 version() {
   echo "0.0.3"
@@ -15,16 +15,20 @@ repository() {
   echo "https://github.com/jessetane/httpcat"
 }
 
-build() {
-  
-  # get source
-  [ ! -e .git ] && git clone "$(repository)" ./
-  
-  # update
+dependencies() {
+  echo "argue 0.0.4"
+}
+
+fetch() {
+  git clone "$(repository)" "$src"
+}
+
+update() {
   git fetch --all
   git fetch --tags
-  
-  # build
+}
+
+build() {
   mkdir -p "$lib"/"$build"
   cd "$lib"/"$build"
   cp -R "$src"/.git ./
