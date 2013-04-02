@@ -16,7 +16,7 @@ repository() {
 }
 
 dependencies() {
-  echo "argue 0.0.4"
+  echo "argue 0.0.5"
 }
 
 fetch() {
