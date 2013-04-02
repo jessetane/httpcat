@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# .vpkg for httpcat
+# .package for httpcat
 #
 
 name() {
@@ -8,7 +8,7 @@ name() {
 }
 
 version() {
-  echo "0.0.3"
+  echo "0.0.4"
 }
 
 repository() {
