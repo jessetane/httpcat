@@ -20,7 +20,7 @@ dependencies() {
 }
 
 fetch() {
-  git clone "$(repository)" "$src"
+  git clone "$(repository)" "$SPM_HOME"/src/"$name"
 }
 
 update() {
@@ -29,6 +29,8 @@ update() {
 }
 
 build() {
+  lib="SPM_HOME"/lib/"$name"
+  src="SPM_HOME"/src/"$name"
   mkdir -p "$lib"/"$build"
   cd "$lib"/"$build"
   cp -R "$src"/.git ./
