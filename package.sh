@@ -20,6 +20,7 @@ dependencies() {
 }
 
 fetch() {
+  [ ! -e "$SRC"/.git ] && rm -rf "$SRC" || return 0
   git clone "$(repository)" "$SRC"
 }
 
