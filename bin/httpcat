@@ -15,8 +15,7 @@ httpcat() {
   cd "$(dirname "$0")"
   
   # deps
-  . spkg.sh
-  spkg include argue 0.0.5 || return 1
+  . libargue || return 1
   
   # parse arguments
   args=("$@")

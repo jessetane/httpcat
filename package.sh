@@ -8,7 +8,7 @@ name() {
 }
 
 version() {
-  echo "0.0.4"
+  echo "0.0.5"
 }
 
 repository() {
@@ -20,19 +20,18 @@ dependencies() {
 }
 
 fetch() {
-  git clone "$(repository)" "$SPM_HOME"/src/"$name"
+  git clone "$(repository)" "$SRC"
 }
 
 update() {
+  cd "$SRC"
   git fetch --all
   git fetch --tags
 }
 
 build() {
-  lib="SPM_HOME"/lib/"$name"
-  src="SPM_HOME"/src/"$name"
-  mkdir -p "$lib"/"$build"
-  cd "$lib"/"$build"
-  cp -R "$src"/.git ./
-  git reset --hard "$version"
+  mkdir -p "$LIB"
+  cp -R "$SRC"/.git "$LIB"/
+  cd "$LIB"
+  git reset --hard "$VERSION"
 }
