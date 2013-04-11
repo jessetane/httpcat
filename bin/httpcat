@@ -15,7 +15,7 @@ httpcat() {
   cd "$(dirname "$0")"
   
   # deps
-  . libargue || return 1
+  . libargue.sh || return 1
   
   # parse arguments
   args=("$@")
